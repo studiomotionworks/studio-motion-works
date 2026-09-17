@@ -9,7 +9,7 @@ const works = [
     id: "zephyr",
     title: "Zephyr",
     category: "Commissioned Work",
-    year: "2025",
+    year: "2021",
     color: "#C5A065",
     videoUrl:
       "https://ky7bb3jva0qgai9o.public.blob.vercel-storage.com/zephyr.mp4",
@@ -18,28 +18,28 @@ const works = [
     id: "firefly",
     title: "Firefly",
     category: "Kinetic Luminaries",
-    year: "2024",
+    year: "2019",
     color: "#B87333",
     videoUrl:
       "https://ky7bb3jva0qgai9o.public.blob.vercel-storage.com/firefly.mp4",
   },
   {
-    id: "sleek",
-    title: "Kinetic Luminaries",
-    category: "Interactive Installation",
-    year: "2025",
-    color: "#C0C0C0",
-    videoUrl:
-      "https://ky7bb3jva0qgai9o.public.blob.vercel-storage.com/sleek.mp4",
-  },
-  {
     id: "flying",
     title: "Flying Peacock",
     category: "Commissioned Work",
-    year: "2023",
+    year: "2015",
     color: "#C5A065",
     videoUrl:
       "https://ky7bb3jva0qgai9o.public.blob.vercel-storage.com/flying.mp4",
+  },
+  {
+    id: "sleek",
+    title: "Sleek",
+    category: "Kinetic Luminaries",
+    year: "2022",
+    color: "#C0C0C0",
+    videoUrl:
+      "https://ky7bb3jva0qgai9o.public.blob.vercel-storage.com/sleek.mp4",
   },
 ];
 
@@ -47,24 +47,38 @@ function TiltCard({ work }: { work: (typeof works)[0] }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // 1. Intersection Observer via Framer Motion
-  // margin: "100px" preloads the video right before it scrolls into the viewport
-  const isInView = useInView(containerRef, { margin: "100px", amount: 0.2 });
+  // Every card that's in view plays — no artificial "only one at a time"
+  // restriction, since on wide screens all 4 columns are visible together.
+  const isInView = useInView(containerRef, { amount: 0.3, margin: "50px" });
 
-  // 2. Play/Pause control based on intersection
   useEffect(() => {
-    if (!videoRef.current) return;
+    const video = videoRef.current;
+    if (!video) return;
 
     if (isInView) {
-      videoRef.current.play().catch(() => {
-        // Autoplay policies may catch unhandled promises
-      });
-    } else {
-      videoRef.current.pause();
-    }
-  }, [isInView]);
+      // Small debounce: if the user is scrolling fast, don't bother
+      // starting a load/decode for a card they're about to scroll past.
+      const timer = setTimeout(() => {
+        if (video.getAttribute("src") !== work.videoUrl) {
+          video.src = work.videoUrl;
+          video.load();
+        }
+        video.play().catch(() => {
+          // Autoplay can be blocked before any user interaction; safe to ignore.
+        });
+      }, 120);
 
-  // 3. Tilt Mouse Interaction Setup
+      return () => clearTimeout(timer);
+    }
+
+    // Out of view: fully release the decode buffer and network connection
+    // (not just pause) so scrolled-past cards stop costing memory/GPU.
+    video.pause();
+    video.removeAttribute("src");
+    video.load();
+  }, [isInView, work.videoUrl]);
+
+  // Tilt mouse interaction
   const rotateX = useMotionValue(0);
   const rotateY = useMotionValue(0);
   const springRotateX = useSpring(rotateX, { stiffness: 200, damping: 20 });
@@ -94,23 +108,22 @@ function TiltCard({ work }: { work: (typeof works)[0] }) {
         transformStyle: "preserve-3d",
         perspective: 1000,
       }}
-      className="group relative aspect-[3/4] overflow-hidden rounded-xl bg-gunmetal"
+      // content-visibility lets the browser skip layout/paint work for
+      // cards that are far offscreen, which matters more as the list grows.
+      className="group relative aspect-[3/4] overflow-hidden rounded-xl bg-gunmetal [content-visibility:auto] [contain-intrinsic-size:0_600px]"
     >
-      {/* Background Video using Lazy Intersection Loading */}
-      {work.videoUrl && (
-        <video
-          ref={videoRef}
-          loop
-          muted
-          playsInline
-          preload="none"
-          className="absolute inset-0 h-full w-full object-cover opacity-60 transition-opacity duration-700 group-hover:opacity-90"
-        >
-          {isInView && <source src={work.videoUrl} type="video/mp4" />}
-        </video>
-      )}
+      <video
+        ref={videoRef}
+        loop
+        muted
+        playsInline
+        preload="none"
+        disablePictureInPicture
+        className="absolute inset-0 h-full w-full object-cover"
+      />
 
-      {/* Radial Gradient Overlay */}
+      {/* Radial Gradient Overlay — also doubles as the placeholder look
+          before/without an active video */}
       <div
         className="absolute inset-0 opacity-30 transition-opacity duration-700 group-hover:opacity-50"
         style={{
@@ -118,13 +131,11 @@ function TiltCard({ work }: { work: (typeof works)[0] }) {
         }}
       />
 
-      {/* Decorative Glow Circle */}
       <div
         className="absolute -bottom-16 -right-16 h-48 w-48 rounded-full border border-bronze/20 opacity-0 transition-all duration-700 group-hover:opacity-100 group-hover:border-bronze/40"
         style={{ boxShadow: `0 0 60px ${work.color}30` }}
       />
 
-      {/* Card Content */}
       <div className="absolute inset-0 flex flex-col justify-end p-6 z-10 bg-gradient-to-t from-void/90 via-void/30 to-transparent">
         <span className="font-body text-[9px] tracking-[0.3em] uppercase text-bronze/70">
           {work.category}

@@ -79,7 +79,7 @@ export function StudioStorySection() {
           e.g. "/images/founder.jpg" once it's added to /public/images.
         */}
         <Image
-          src="/founder.jpg"
+          src="/founder.jpeg"
           alt="Founder of Studio Motionworks"
           fill
           className="object-cover"

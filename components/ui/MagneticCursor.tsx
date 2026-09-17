@@ -51,7 +51,7 @@ export function MagneticCursor() {
   return (
     <motion.div
       ref={cursorRef}
-      className="pointer-events-none fixed top-0 left-0 z-[9999] mix-blend-difference"
+      className="hidden md:flex pointer-events-none fixed top-0 left-0 z-[9999] mix-blend-difference"
       style={{
         x,
         y,

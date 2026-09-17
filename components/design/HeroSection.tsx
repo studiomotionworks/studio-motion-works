@@ -89,7 +89,6 @@ export function HeroSection() {
         >
           <source src="https://ky7bb3jva0qgai9o.public.blob.vercel-storage.com/output.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-void/50" />
       </div>
       <motion.div
         initial={{ opacity: 0 }}
