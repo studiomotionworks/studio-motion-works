@@ -86,9 +86,8 @@ export function HeroSection() {
           loop
           playsInline
           className="h-full w-full object-cover"
-          // poster="/images/hero-poster.jpg"
         >
-          <source src="/hero.mp4" type="video/mp4" />
+          <source src="https://ky7bb3jva0qgai9o.public.blob.vercel-storage.com/output.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-void/50" />
       </div>

@@ -55,9 +55,9 @@ export function StudioStorySection() {
         </p>
 
         <p className="mt-6 max-w-xl font-body text-sm leading-relaxed text-mist md:text-base">
-          Blending refined craftsmanship, engineering, and artistic
-          expression, the studio&apos;s work is conceived as a statement,
-          quietly transforming space and emotion through motion.
+          Blending refined craftsmanship, engineering, and artistic expression,
+          the studio&apos;s work is conceived as a statement, quietly
+          transforming space and emotion through motion.
         </p>
 
         {/* <a
@@ -72,7 +72,7 @@ export function StudioStorySection() {
       {/* Founder photo */}
       <div
         ref={photoRef}
-        className="relative mx-auto mt-20 aspect-[4/5] w-full max-w-2xl overflow-hidden rounded-sm bg-gunmetal md:aspect-[16/10]"
+        className="relative mx-auto mt-20 aspect-[4/5] w-full max-w-md overflow-hidden rounded-sm bg-gunmetal md:aspect-[16/10]"
       >
         {/*
           Replace the src below with the uploaded founder photo,
@@ -83,7 +83,7 @@ export function StudioStorySection() {
           alt="Founder of Studio Motionworks"
           fill
           className="object-cover"
-          sizes="(min-width: 768px) 42rem, 100vw"
+          sizes="(min-width: 768px) 28rem, 100vw"
         />
 
         {/* Bronze overlay tint, matching IntroSection's video treatment */}

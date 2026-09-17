@@ -1,50 +1,78 @@
 "use client";
 
-import { motion, useMotionValue, useSpring } from "framer-motion";
-import { useRef } from "react";
+import { motion, useMotionValue, useSpring, useInView } from "framer-motion";
+import { useRef, useEffect } from "react";
 import Link from "next/link";
 
 const works = [
   {
-    id: "helix",
-    title: "Helix Table",
-    category: "Kinetic Furnishing",
+    id: "zephyr",
+    title: "Zephyr",
+    category: "Commissioned Work",
     year: "2025",
     color: "#C5A065",
+    videoUrl:
+      "https://ky7bb3jva0qgai9o.public.blob.vercel-storage.com/zephyr.mp4",
   },
   {
-    id: "orbit",
-    title: "Orbital Chandelier",
-    category: "Sculpture",
+    id: "firefly",
+    title: "Firefly",
+    category: "Kinetic Luminaries",
     year: "2024",
     color: "#B87333",
+    videoUrl:
+      "https://ky7bb3jva0qgai9o.public.blob.vercel-storage.com/firefly.mp4",
   },
   {
-    id: "tide",
-    title: "Tidal Wall",
+    id: "sleek",
+    title: "Kinetic Luminaries",
     category: "Interactive Installation",
     year: "2025",
     color: "#C0C0C0",
+    videoUrl:
+      "https://ky7bb3jva0qgai9o.public.blob.vercel-storage.com/sleek.mp4",
   },
   {
-    id: "pulse",
-    title: "Pulse Bench",
-    category: "Kinetic Seating",
+    id: "flying",
+    title: "Flying Peacock",
+    category: "Commissioned Work",
     year: "2023",
     color: "#C5A065",
+    videoUrl:
+      "https://ky7bb3jva0qgai9o.public.blob.vercel-storage.com/flying.mp4",
   },
 ];
 
 function TiltCard({ work }: { work: (typeof works)[0] }) {
-  const ref = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // 1. Intersection Observer via Framer Motion
+  // margin: "100px" preloads the video right before it scrolls into the viewport
+  const isInView = useInView(containerRef, { margin: "100px", amount: 0.2 });
+
+  // 2. Play/Pause control based on intersection
+  useEffect(() => {
+    if (!videoRef.current) return;
+
+    if (isInView) {
+      videoRef.current.play().catch(() => {
+        // Autoplay policies may catch unhandled promises
+      });
+    } else {
+      videoRef.current.pause();
+    }
+  }, [isInView]);
+
+  // 3. Tilt Mouse Interaction Setup
   const rotateX = useMotionValue(0);
   const rotateY = useMotionValue(0);
   const springRotateX = useSpring(rotateX, { stiffness: 200, damping: 20 });
   const springRotateY = useSpring(rotateY, { stiffness: 200, damping: 20 });
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
     rotateX.set((e.clientY - centerY) * -0.06);
@@ -53,7 +81,7 @@ function TiltCard({ work }: { work: (typeof works)[0] }) {
 
   return (
     <motion.div
-      ref={ref}
+      ref={containerRef}
       data-magnetic
       onMouseMove={handleMouseMove}
       onMouseLeave={() => {
@@ -68,17 +96,36 @@ function TiltCard({ work }: { work: (typeof works)[0] }) {
       }}
       className="group relative aspect-[3/4] overflow-hidden rounded-xl bg-gunmetal"
     >
+      {/* Background Video using Lazy Intersection Loading */}
+      {work.videoUrl && (
+        <video
+          ref={videoRef}
+          loop
+          muted
+          playsInline
+          preload="none"
+          className="absolute inset-0 h-full w-full object-cover opacity-60 transition-opacity duration-700 group-hover:opacity-90"
+        >
+          {isInView && <source src={work.videoUrl} type="video/mp4" />}
+        </video>
+      )}
+
+      {/* Radial Gradient Overlay */}
       <div
         className="absolute inset-0 opacity-30 transition-opacity duration-700 group-hover:opacity-50"
         style={{
           background: `radial-gradient(circle at 30% 40%, ${work.color}40, transparent 70%)`,
         }}
       />
+
+      {/* Decorative Glow Circle */}
       <div
         className="absolute -bottom-16 -right-16 h-48 w-48 rounded-full border border-bronze/20 opacity-0 transition-all duration-700 group-hover:opacity-100 group-hover:border-bronze/40"
         style={{ boxShadow: `0 0 60px ${work.color}30` }}
       />
-      <div className="absolute inset-0 flex flex-col justify-end p-6">
+
+      {/* Card Content */}
+      <div className="absolute inset-0 flex flex-col justify-end p-6 z-10 bg-gradient-to-t from-void/90 via-void/30 to-transparent">
         <span className="font-body text-[9px] tracking-[0.3em] uppercase text-bronze/70">
           {work.category}
         </span>
