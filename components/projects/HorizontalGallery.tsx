@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ProjectCard } from "./ProjectCard";
-import type { Project } from "@/data/projects";
+import type { Project } from "@/payload-types";
 
 export function HorizontalGallery({
   projects,

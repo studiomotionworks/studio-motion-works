@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { KineticText } from "@/components/ui/KineticText";
-import type { Post } from "@/data/posts";
+import type { Post } from "@/payload-types";
 
 export function ArticleHeader({ post }: { post: Post }) {
   return (
@@ -50,7 +50,7 @@ export function ArticleHeader({ post }: { post: Post }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.25 }}
           className="mt-10 block font-body text-[10px] tracking-[0.4em] uppercase"
-          style={{ color: post.accent }}
+          style={{ color: post.accent ?? '' }}
         >
           {post.category}
         </motion.span>
@@ -90,7 +90,7 @@ export function ArticleHeader({ post }: { post: Post }) {
           <span className="h-3 w-px bg-border" />
 
           <span className="font-body text-[10px] tracking-[0.2em] uppercase text-ink-subtle">
-            {new Date(post.date).toLocaleDateString("en-US", {
+            {new Date(post.publishedAt ?? '').toLocaleDateString("en-US", {
               month: "long",
               day: "numeric",
               year: "numeric",

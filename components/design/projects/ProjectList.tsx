@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { Project } from "@/data/projects";
+import type { Project } from "@/payload-types";
 
 export function ProjectList({
   projects,
@@ -47,7 +47,7 @@ export function ProjectList({
               {/* Category */}
               <span
                 className="hidden font-body text-[9px] tracking-[0.3em] uppercase md:block"
-                style={{ color: project.accent }}
+                style={{ color: project.accent ?? "" }}
               >
                 {project.category}
               </span>

@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import type { Event } from "@/data/events";
+import type { Event } from "@/payload-types";
 
 function MotionBlurCard({ event, index }: { event: Event; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -55,9 +55,7 @@ function MotionBlurCard({ event, index }: { event: Event; index: number }) {
         delay: index * 0.12,
         ease: [0.16, 1, 0.3, 1],
       }}
-      className={`group relative cursor-pointer ${
-        isOffset ? "md:mt-20" : ""
-      }`}
+      className={`group relative cursor-pointer ${isOffset ? "md:mt-20" : ""}`}
       style={{
         rotate: rotation,
         perspective: 1200,
@@ -126,7 +124,7 @@ function MotionBlurCard({ event, index }: { event: Event; index: number }) {
           <div className="flex items-center gap-3">
             <span
               className="font-body text-[9px] tracking-[0.3em] uppercase"
-              style={{ color: event.accent }}
+              style={{ color: event.accent ?? "" }}
             >
               {event.category}
             </span>

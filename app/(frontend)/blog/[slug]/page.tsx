@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { posts } from "@/data/posts";
-import { postContent, defaultContent } from "@/data/postContent";
+import { getAllPosts, getPostBySlug } from "@/lib/queries";
+import { toContentBlocks } from "@/lib/content-blocks";
 import { ArticleProgress } from "@/components/blog/ArticleProgress";
 import { ArticleHeader } from "@/components/blog/ArticleHeader";
 import { Prose } from "@/components/blog/Prose";
@@ -15,6 +15,7 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
+  const posts = await getAllPosts();
   return posts.map((post) => ({ slug: post.slug }));
 }
 
@@ -22,7 +23,7 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = posts.find((p) => p.slug === slug);
+  const post = await getPostBySlug(slug);
   if (!post) return { title: "Article Not Found — Kinetic" };
   return {
     title: `${post.title} — Kinetic Journal`,
@@ -32,10 +33,11 @@ export async function generateMetadata({
 
 export default async function ArticlePage({ params }: PageProps) {
   const { slug } = await params;
-  const post = posts.find((p) => p.slug === slug);
+  const post = await getPostBySlug(slug);
   if (!post) notFound();
 
-  const content = postContent[slug] ?? defaultContent;
+  const allPosts = await getAllPosts();
+  const blocks = toContentBlocks(post.content);
 
   return (
     <>
@@ -45,19 +47,21 @@ export default async function ArticlePage({ params }: PageProps) {
 
       <div className="px-6">
         <div className="mx-auto max-w-3xl">
-          <Prose blocks={content.blocks} />
+          <Prose blocks={blocks} />
 
           <ShareRow title={post.title} />
 
+          {/* authorBio / authorRole now live directly on the post
+              (Payload), so there's no separate postContent lookup */}
           <AuthorCard
             post={post}
-            bio={content.authorBio}
-            role={content.authorRole}
+            bio={post.authorBio ?? ''}
+            role={post.authorRole ?? ''}
           />
 
           <NewsletterCTA />
 
-          <RelatedPosts current={post} allPosts={posts} />
+          <RelatedPosts current={post} allPosts={allPosts} />
         </div>
       </div>
 

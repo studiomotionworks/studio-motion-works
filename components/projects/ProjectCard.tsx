@@ -7,7 +7,7 @@ import { HelixPreview } from "./previews/HelixPreview";
 import { OrbitPreview } from "./previews/OrbitPreview";
 import { TidePreview } from "./previews/TidePreview";
 import { PulsePreview } from "./previews/PulsePreview";
-import type { Project } from "@/data/projects";
+import type { Project } from "@/payload-types";
 
 const previewMap: Record<string, React.ComponentType> = {
   helix: HelixPreview,
@@ -114,7 +114,7 @@ export function ProjectCard({
           className="rounded-full border px-3 py-1 font-body text-[9px] tracking-[0.3em] uppercase backdrop-blur-sm"
           style={{
             borderColor: `${project.accent}40`,
-            color: project.accent,
+            color: project.accent ?? '',
             backgroundColor: "rgba(18,18,18,0.4)",
           }}
         >
@@ -136,7 +136,7 @@ export function ProjectCard({
 
         {/* Materials row */}
         <div className="mt-5 flex flex-wrap gap-2">
-          {project.materials.slice(0, 3).map((mat) => (
+          {project?.materials?.slice(0, 3).map((mat) => (
             <span
               key={mat}
               className="rounded-full border border-border px-3 py-1 font-body text-[9px] tracking-[0.15em] uppercase text-ink-subtle"

@@ -3,7 +3,7 @@
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useRef } from "react";
 import Link from "next/link";
-import type { Post } from "@/data/posts";
+import type { Post } from "@/payload-types";
 
 export function BlogCard({ post }: { post: Post }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -52,12 +52,15 @@ export function BlogCard({ post }: { post: Post }) {
         style={{ boxShadow: `0 0 80px ${post.accent}20` }}
       />
 
-      <Link href={`/blog/${post.slug}`} className="relative z-10 flex h-full flex-col p-7">
+      <Link
+        href={`/blog/${post.slug}`}
+        className="relative z-10 flex h-full flex-col p-7"
+      >
         {/* Meta row */}
         <div className="mb-6 flex items-center justify-between">
           <span
             className="font-body text-[9px] tracking-[0.3em] uppercase"
-            style={{ color: post.accent }}
+            style={{ color: post.accent ?? '' }}
           >
             {post.category}
           </span>
@@ -83,7 +86,7 @@ export function BlogCard({ post }: { post: Post }) {
               {post.author}
             </span>
             <span className="font-body text-[9px] tracking-[0.2em] text-ink-subtle">
-              {new Date(post.date).toLocaleDateString("en-US", {
+              {new Date(post.publishedAt ?? '').toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",
                 year: "numeric",

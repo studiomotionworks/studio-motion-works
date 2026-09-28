@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import type { Event } from "@/data/events";
+import type { Event } from "@/payload-types";
+
 import { useEffect, useState } from "react";
 
 function InlineCountdown({ target }: { target: string }) {
@@ -75,7 +76,7 @@ export function UpcomingTimeline({ events }: { events: Event[] }) {
                 {/* Accent bar */}
                 <span
                   className="absolute left-0 top-0 h-full w-0.5 transition-all duration-500 group-hover:w-1"
-                  style={{ backgroundColor: event.accent }}
+                  style={{ backgroundColor: event.accent ?? "" }}
                 />
 
                 <div className="grid grid-cols-1 gap-6 p-6 md:grid-cols-[auto_1fr_auto] md:items-center md:gap-8 md:p-8">
@@ -105,7 +106,7 @@ export function UpcomingTimeline({ events }: { events: Event[] }) {
                         className="rounded-full border px-2.5 py-0.5 font-body text-[8px] tracking-[0.3em] uppercase"
                         style={{
                           borderColor: `${event.accent}40`,
-                          color: event.accent,
+                          color: event.accent ?? "",
                         }}
                       >
                         {event.category}

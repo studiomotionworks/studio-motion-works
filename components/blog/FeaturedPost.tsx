@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import type { Post } from "@/data/posts";
+import type { Post } from "@/payload-types";
 
 export function FeaturedPost({ post }: { post: Post }) {
   return (
@@ -57,7 +57,7 @@ export function FeaturedPost({ post }: { post: Post }) {
             <div className="flex flex-col justify-center p-8 md:p-12">
               <span
                 className="font-body text-[9px] tracking-[0.3em] uppercase"
-                style={{ color: post.accent }}
+                style={{ color: post.accent ?? '' }}
               >
                 {post.category}
               </span>
@@ -80,7 +80,7 @@ export function FeaturedPost({ post }: { post: Post }) {
                 </span>
                 <span className="h-px w-6 bg-border" />
                 <span className="font-body text-[10px] tracking-[0.2em] text-ink-subtle">
-                  {new Date(post.date).toLocaleDateString("en-US", {
+                  {new Date(post.publishedAt ?? '').toLocaleDateString("en-US", {
                     month: "long",
                     year: "numeric",
                   })}

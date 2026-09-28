@@ -5,7 +5,7 @@ import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { MagneticCursor } from "@/components/ui/MagneticCursor";
 import { FloatingNav } from "@/components/ui/FloatingNav";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import "./globals.css";
+import "../globals.css";
 import Footer from "@/components/ui/Footer";
 
 const spaceGrotesk = Space_Grotesk({

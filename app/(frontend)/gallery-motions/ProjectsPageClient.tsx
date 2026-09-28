@@ -6,10 +6,9 @@ import { ProjectsHero } from "@/components/design/projects/ProjectsHero";
 import { HorizontalGallery } from "@/components/design/projects/HorizontalGallery";
 import { ProjectList } from "@/components/design/projects/ProjectList";
 import { ProjectModal } from "@/components/design/projects/ProjectModal";
-import { projects as allProjects } from "@/data/projects";
-import type { Project } from "@/data/projects";
+import type { Project } from "@/payload-types";
 
-export default function ProjectsPage() {
+export function ProjectsPageClient({ projects: allProjects }: { projects: Project[] }) {
   const [activeCategory, setActiveCategory] = useState("All");
   const [activeYear, setActiveYear] = useState("All");
   const [viewMode, setViewMode] = useState<"gallery" | "list">("gallery");
@@ -22,7 +21,7 @@ export default function ProjectsPage() {
       const matchYear = activeYear === "All" || p.year === activeYear;
       return matchCategory && matchYear;
     });
-  }, [activeCategory, activeYear]);
+  }, [allProjects, activeCategory, activeYear]);
 
   return (
     <>

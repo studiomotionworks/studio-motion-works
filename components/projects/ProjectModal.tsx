@@ -11,7 +11,7 @@ import {
 } from "@react-three/drei";
 import { HelixModel } from "./models/HelixModel";
 import { PulseModel } from "./models/PulseModel";
-import type { Project } from "@/data/projects";
+import type { Project } from "@/payload-types";
 
 const modelMap: Record<string, React.ComponentType> = {
   helix: HelixModel,
@@ -92,7 +92,7 @@ export function ProjectModal({
             >
               <span
                 className="font-body text-[10px] tracking-[0.4em] uppercase"
-                style={{ color: project.accent }}
+                style={{ color: project.accent ?? "" }}
               >
                 {project.category} — {project.year}
               </span>
@@ -139,7 +139,7 @@ export function ProjectModal({
             )}
 
             {/* Before/After Slider (placeholder for projects with images) */}
-            {project.images.length >= 2 && (
+            {(project?.images?.length ?? 0) >= 2 && (
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -178,8 +178,12 @@ export function ProjectModal({
                       const startX = e.clientX;
                       const startPos = sliderPos;
                       const handleMove = (moveEvent: MouseEvent) => {
-                        const delta = ((moveEvent.clientX - startX) / window.innerWidth) * 100;
-                        setSliderPos(Math.max(5, Math.min(95, startPos + delta)));
+                        const delta =
+                          ((moveEvent.clientX - startX) / window.innerWidth) *
+                          100;
+                        setSliderPos(
+                          Math.max(5, Math.min(95, startPos + delta)),
+                        );
                       };
                       const handleUp = () => {
                         window.removeEventListener("mousemove", handleMove);
@@ -190,7 +194,12 @@ export function ProjectModal({
                     }}
                   >
                     <div className="absolute left-1/2 top-1/2 flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-bronze bg-void/80 backdrop-blur-sm">
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                      >
                         <path
                           d="M4 2L1 6L4 10M8 2L11 6L8 10"
                           stroke="#C5A065"
@@ -262,7 +271,7 @@ export function ProjectModal({
                     transition={{ duration: 0.4 }}
                   >
                     <div className="grid grid-cols-1 gap-px overflow-hidden rounded-sm border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
-                      {project.specs.map((spec, i) => (
+                      {project?.specs?.map((spec, i) => (
                         <motion.div
                           key={spec.label}
                           initial={{ opacity: 0 }}
@@ -301,7 +310,9 @@ export function ProjectModal({
                   <span className="font-body text-[9px] tracking-[0.3em] uppercase text-ink-subtle">
                     {item.label}
                   </span>
-                  <p className="mt-1 font-body text-sm text-ink">{item.value}</p>
+                  <p className="mt-1 font-body text-sm text-ink">
+                    {item.value}
+                  </p>
                 </div>
               ))}
             </motion.div>

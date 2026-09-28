@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { BlogCard } from "./BlogCard";
-import type { Post } from "@/data/posts";
+import type { Post } from "@/payload-types";
 
 export function RelatedPosts({
   current,

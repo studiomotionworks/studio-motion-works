@@ -2,7 +2,7 @@
 
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useRef } from "react";
-import type { Post } from "@/data/posts";
+import type { Post } from "@/payload-types";
 
 export function AuthorCard({
   post,
@@ -51,7 +51,7 @@ export function AuthorCard({
       {/* Ambient glow */}
       <div
         className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full opacity-40 blur-[80px]"
-        style={{ background: post.accent }}
+        style={{ background: post.accent ?? '' }}
       />
 
       <div className="relative flex flex-col gap-6 md:flex-row md:items-center">

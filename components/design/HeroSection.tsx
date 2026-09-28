@@ -3,8 +3,6 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { KineticText } from "@/components/ui/KineticText";
-import { MorphButton } from "@/components/ui/MorphButton";
 import { motion } from "framer-motion";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -12,9 +10,6 @@ gsap.registerPlugin(ScrollTrigger);
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLDivElement>(null);
-  const headlineRef = useRef<HTMLDivElement>(null);
-  const subRef = useRef<HTMLParagraphElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -28,40 +23,6 @@ export function HeroSection() {
           trigger: sectionRef.current,
           start: "top top",
           end: "bottom top",
-          scrub: 1,
-        },
-      });
-
-      // Text elements move up faster than scroll
-      gsap.to(headlineRef.current, {
-        yPercent: -40,
-        opacity: 0,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: 1.5,
-        },
-      });
-
-      gsap.to(subRef.current, {
-        yPercent: -20,
-        opacity: 0,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "40% top",
-          scrub: 1,
-        },
-      });
-
-      gsap.to(ctaRef.current, {
-        yPercent: -10,
-        opacity: 0,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "30% top",
           scrub: 1,
         },
       });
@@ -87,7 +48,10 @@ export function HeroSection() {
           playsInline
           className="h-full w-full object-cover"
         >
-          <source src="https://ky7bb3jva0qgai9o.public.blob.vercel-storage.com/output.mp4" type="video/mp4" />
+          <source
+            src="https://ky7bb3jva0qgai9o.public.blob.vercel-storage.com/output.mp4"
+            type="video/mp4"
+          />
         </video>
       </div>
       <motion.div
@@ -102,7 +66,7 @@ export function HeroSection() {
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          className="h-8 w-px bg-gradient-to-b from-bronze/60 to-transparent"
+          className="h-8 w-px bg-linear-to-b from-bronze/60 to-transparent"
         />
       </motion.div>
     </section>

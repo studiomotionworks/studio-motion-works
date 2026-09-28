@@ -5,9 +5,9 @@ import { BlogHero } from "@/components/blog/BlogHero";
 import { FeaturedPost } from "@/components/blog/FeaturedPost";
 import { BlogGrid } from "@/components/blog/BlogGrid";
 import { ReadingProgress } from "@/components/blog/ReadingProgress";
-import { posts } from "@/data/posts";
+import type { Post } from "@/payload-types";
 
-export default function BlogPage() {
+export function BlogPageClient({ posts }: { posts: Post[] }) {
   const [activeCategory, setActiveCategory] = useState("All");
   const featured = posts.find((p) => p.featured);
 
@@ -20,9 +20,7 @@ export default function BlogPage() {
         onCategoryChange={setActiveCategory}
       />
 
-      {featured && activeCategory === "All" && (
-        <FeaturedPost post={featured} />
-      )}
+      {featured && activeCategory === "All" && <FeaturedPost post={featured} />}
 
       <BlogGrid posts={posts} activeCategory={activeCategory} />
     </>

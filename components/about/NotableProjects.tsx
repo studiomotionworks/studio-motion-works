@@ -54,7 +54,7 @@ function ProjectTile({ project, index }: { project: NotableProject; index: numbe
       {/* Category chip */}
       <span
         className="relative font-body text-[9px] tracking-[0.3em] uppercase"
-        style={{ color: project.accent }}
+        style={{ color: project.accent ?? ''}}
       >
         {project.category}
       </span>

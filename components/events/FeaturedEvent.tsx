@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { Countdown } from "./Countdown";
 import { CountdownIcon } from "./CountdownIcon";
-import type { Event } from "@/data/events";
+import type { Event } from "@/payload-types";
 
 export function FeaturedEvent({ event }: { event: Event }) {
   const [urgency, setUrgency] = useState(0);
@@ -40,7 +40,7 @@ export function FeaturedEvent({ event }: { event: Event }) {
                 className="rounded-full border px-3 py-1 font-body text-[9px] tracking-[0.3em] uppercase"
                 style={{
                   borderColor: `${event.accent}40`,
-                  color: event.accent,
+                  color: event.accent ?? '',
                 }}
               >
                 {event.category}
