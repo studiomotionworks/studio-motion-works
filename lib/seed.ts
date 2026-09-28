@@ -79,24 +79,19 @@ function toPayloadBlocks(blocks: ContentBlock[]): PayloadBlocks {
     }
   }) as PayloadBlocks;
 }
-    
+
 function contentForPost(post: SourcePost) {
   return postContent[post.slug] ?? defaultContent;
 }
 
 async function seed() {
-  console.log("=================================");
-  console.log("SEED START");
-  console.log("=================================");
-
-  console.log("Before getPayload");
 
   const payload = await getPayload({
     config,
   });
 
-  console.log("After getPayload");
 
+  
   // Test that Payload can actually query the database.
   const events = await payload.find({
     collection: "events",

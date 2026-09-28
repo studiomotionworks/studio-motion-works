@@ -11,11 +11,6 @@ import { Posts } from "./collections/Posts";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
-console.log("DEBUG env check:", {
-  hasDbUrl: !!process.env.DATABASE_URL,
-  hasSecret: !!process.env.PAYLOAD_SECRET,
-  dbUrlHost: process.env.DATABASE_URL?.split("@")[1]?.split("/")[0],
-});
 export default buildConfig({
   // Security through Obscurity: Change the default /admin route
   routes: {
