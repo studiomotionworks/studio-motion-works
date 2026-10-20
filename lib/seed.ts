@@ -84,124 +84,124 @@ function contentForPost(post: SourcePost) {
   return postContent[post.slug] ?? defaultContent;
 }
 
-async function seed() {
+// async function seed() {
 
-  const payload = await getPayload({
-    config,
-  });
+//   const payload = await getPayload({
+//     config,
+//   });
 
 
   
-  // Test that Payload can actually query the database.
-  const events = await payload.find({
-    collection: "events",
-    limit: 1,
-  });
+//   // Test that Payload can actually query the database.
+//   const events = await payload.find({
+//     collection: "events",
+//     limit: 1,
+//   });
 
-  console.log("Database query successful");
-  console.log("Existing events:", events);
+//   console.log("Database query successful");
+//   console.log("Existing events:", events);
 
-  console.log("Seeding events...");
+//   console.log("Seeding events...");
 
-  for (const event of sourceEvents) {
-    console.log(`Creating event: ${event.slug}`);
+//   for (const event of sourceEvents) {
+//     console.log(`Creating event: ${event.slug}`);
 
-    await payload.create({
-      collection: "events",
-      data: {
-        title: event.title,
-        slug: event.slug,
-        subtitle: event.subtitle,
-        category: event.category,
-        status: event.status,
-        date: event.date,
-        endDate: event.endDate,
-        time: event.time,
-        venue: event.venue,
-        city: event.city,
-        country: event.country,
-        description: event.description,
-        longDescription: event.longDescription,
-        accent: event.accent,
-        image: event.image,
-        rsvpUrl: event.rsvpUrl,
-        capacity: event.capacity,
-        artists: event.artists,
-        tags: event.tags,
-      },
-    });
+//     await payload.create({
+//       collection: "events",
+//       data: {
+//         title: event.title,
+//         slug: event.slug,
+//         subtitle: event.subtitle,
+//         category: event.category,
+//         status: event.status,
+//         date: event.date,
+//         endDate: event.endDate,
+//         time: event.time,
+//         venue: event.venue,
+//         city: event.city,
+//         country: event.country,
+//         description: event.description,
+//         longDescription: event.longDescription,
+//         accent: event.accent,
+//         image: event.image,
+//         rsvpUrl: event.rsvpUrl,
+//         capacity: event.capacity,
+//         artists: event.artists,
+//         tags: event.tags,
+//       },
+//     });
 
-    console.log(`Created event: ${event.slug}`);
-  }
+//     console.log(`Created event: ${event.slug}`);
+//   }
 
-  console.log("Seeding posts...");
+//   console.log("Seeding posts...");
 
-  for (const post of sourcePosts) {
-    console.log(`Creating post: ${post.slug}`);
+//   for (const post of sourcePosts) {
+//     console.log(`Creating post: ${post.slug}`);
 
-    const body = contentForPost(post);
+//     const body = contentForPost(post);
 
-    await payload.create({
-      collection: "posts",
-      data: {
-        title: post.title,
-        slug: post.slug,
-        excerpt: post.excerpt,
-        category: post.category,
-        accent: post.accent,
-        readTime: post.readTime,
-        featured: !!post.featured,
-        publishedAt: post.date,
-        author: post.author,
-        authorRole: body.authorRole,
-        authorBio: body.authorBio,
-        content: toPayloadBlocks(body.blocks),
-      },
-    });
+//     await payload.create({
+//       collection: "posts",
+//       data: {
+//         title: post.title,
+//         slug: post.slug,
+//         excerpt: post.excerpt,
+//         category: post.category,
+//         accent: post.accent,
+//         readTime: post.readTime,
+//         featured: !!post.featured,
+//         publishedAt: post.date,
+//         author: post.author,
+//         authorRole: body.authorRole,
+//         authorBio: body.authorBio,
+//         content: toPayloadBlocks(body.blocks),
+//       },
+//     });
 
-    console.log(`Created post: ${post.slug}`);
-  }
+//     console.log(`Created post: ${post.slug}`);
+//   }
 
-  console.log("Seeding projects...");
+//   console.log("Seeding projects...");
 
-  for (const project of sourceProjects) {
-    console.log(`Creating project: ${project.slug}`);
+//   for (const project of sourceProjects) {
+//     console.log(`Creating project: ${project.slug}`);
 
-    await payload.create({
-      collection: "projects",
-      data: {
-        title: project.title,
-        slug: project.slug,
-        subtitle: project.subtitle,
-        category: project.category,
-        featured: !!project.featured,
-        year: project.year,
-        client: project.client,
-        location: project.location,
-        materials: project.materials,
-        dimensions: project.dimensions,
-        duration: project.duration,
-        accent: project.accent,
-        description: project.description,
-        story: project.story,
-        specs: project.specs,
-        coverImage: project.images?.[0]?.src,
-        images: project.images,
-        video: project.video,
-        modelUrl: project.modelUrl,
-      },
-    });
+//     await payload.create({
+//       collection: "projects",
+//       data: {
+//         title: project.title,
+//         slug: project.slug,
+//         subtitle: project.subtitle,
+//         category: project.category,
+//         featured: !!project.featured,
+//         year: project.year,
+//         client: project.client,
+//         location: project.location,
+//         materials: project.materials,
+//         dimensions: project.dimensions,
+//         duration: project.duration,
+//         accent: project.accent,
+//         description: project.description,
+//         story: project.story,
+//         specs: project.specs,
+//         coverImage: project.images?.[0]?.src,
+//         images: project.images,
+//         video: project.video,
+//         modelUrl: project.modelUrl,
+//       },
+//     });
 
-    console.log(`Created project: ${project.slug}`);
-  }
+//     console.log(`Created project: ${project.slug}`);
+//   }
 
-  console.log("=================================");
-  console.log("SEED COMPLETE");
-  console.log("=================================");
-}
+//   console.log("=================================");
+//   console.log("SEED COMPLETE");
+//   console.log("=================================");
+// }
 
 console.log("=================================");
 console.log("SEED COMPLETE");
 console.log("=================================");
 
-await seed();
+// await seed();

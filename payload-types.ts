@@ -71,6 +71,7 @@ export interface Config {
     events: Event;
     posts: Post;
     projects: Project;
+    media: Media;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -82,6 +83,7 @@ export interface Config {
     events: EventsSelect<false> | EventsSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
+    media: MediaSelect<false> | MediaSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -177,16 +179,52 @@ export interface Event {
    * Hex color, e.g. #C5A065
    */
   accent?: string | null;
-  /**
-   * Image URL
-   */
-  image?: string | null;
+  imageFile?: (number | null) | Media;
   rsvpUrl?: string | null;
   capacity?: string | null;
   artists?: string[] | null;
   tags?: string[] | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  alt?: string | null;
+  prefix?: string | null;
+  _objectKey?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    thumb?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -208,6 +246,7 @@ export interface Post {
   readTime?: string | null;
   featured?: boolean | null;
   publishedAt?: string | null;
+  cover?: (number | null) | Media;
   coverImage?: string | null;
   author: string;
   authorRole?: string | null;
@@ -239,10 +278,11 @@ export interface Post {
             blockType: 'quote';
           }
         | {
+            image?: (number | null) | Media;
             /**
              * Image URL
              */
-            src: string;
+            src?: string | null;
             alt: string;
             caption?: string | null;
             id?: string | null;
@@ -314,9 +354,15 @@ export interface Project {
    * Image URL, used for list/grid thumbnails
    */
   coverImage?: string | null;
+  cover?: (number | null) | Media;
+  videoFile?: (number | null) | Media;
   images?:
     | {
-        src: string;
+        image?: (number | null) | Media;
+        /**
+         * Legacy URL
+         */
+        src?: string | null;
         alt: string;
         id?: string | null;
       }[]
@@ -371,6 +417,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'projects';
         value: number | Project;
+      } | null)
+    | ({
+        relationTo: 'media';
+        value: number | Media;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -457,7 +507,7 @@ export interface EventsSelect<T extends boolean = true> {
   description?: T;
   longDescription?: T;
   accent?: T;
-  image?: T;
+  imageFile?: T;
   rsvpUrl?: T;
   capacity?: T;
   artists?: T;
@@ -478,6 +528,7 @@ export interface PostsSelect<T extends boolean = true> {
   readTime?: T;
   featured?: T;
   publishedAt?: T;
+  cover?: T;
   coverImage?: T;
   author?: T;
   authorRole?: T;
@@ -512,6 +563,7 @@ export interface PostsSelect<T extends boolean = true> {
         image?:
           | T
           | {
+              image?: T;
               src?: T;
               alt?: T;
               caption?: T;
@@ -579,9 +631,12 @@ export interface ProjectsSelect<T extends boolean = true> {
         id?: T;
       };
   coverImage?: T;
+  cover?: T;
+  videoFile?: T;
   images?:
     | T
     | {
+        image?: T;
         src?: T;
         alt?: T;
         id?: T;
@@ -590,6 +645,50 @@ export interface ProjectsSelect<T extends boolean = true> {
   modelUrl?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media_select".
+ */
+export interface MediaSelect<T extends boolean = true> {
+  alt?: T;
+  prefix?: T;
+  _objectKey?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumb?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        card?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -28,7 +28,7 @@ export function toContentBlocks(content: Post['content']): ContentBlock[] {
       case 'image':
         return {
           type: 'image',
-          src: block.src,
+          src: block.src ?? '',
           alt: block.alt,
           caption: block.caption ?? undefined,
         }

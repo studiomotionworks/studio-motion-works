@@ -1,100 +1,100 @@
 import type { CollectionConfig } from 'payload'
 
 export const Projects: CollectionConfig = {
-  slug: 'projects',
+  slug: "projects",
   admin: {
-    useAsTitle: 'title',
-    defaultColumns: ['title', 'category', 'year', 'featured'],
+    useAsTitle: "title",
+    defaultColumns: ["title", "category", "year", "featured"],
   },
   access: {
     read: () => true, // Public read access for frontend
   },
   fields: [
     {
-      name: 'title',
-      type: 'text',
+      name: "title",
+      type: "text",
       required: true,
     },
     {
-      name: 'slug',
-      type: 'text',
+      name: "slug",
+      type: "text",
       required: true,
       unique: true,
       admin: {
-        position: 'sidebar',
+        position: "sidebar",
       },
     },
     {
-      name: 'subtitle',
-      type: 'text',
+      name: "subtitle",
+      type: "text",
     },
     {
-      name: 'category',
-      type: 'select',
+      name: "category",
+      type: "select",
       required: true,
-      options: ['Kinetic Luminaries', 'Kinetic Arts', 'Comissioned Works'],
+      options: ["Kinetic Luminaries", "Kinetic Arts", "Comissioned Works"],
     },
     {
-      name: 'featured',
-      type: 'checkbox',
+      name: "featured",
+      type: "checkbox",
       defaultValue: false,
       admin: {
-        position: 'sidebar',
+        position: "sidebar",
       },
     },
     {
-      name: 'year',
-      type: 'text',
+      name: "year",
+      type: "text",
     },
     {
-      name: 'client',
-      type: 'text',
+      name: "client",
+      type: "text",
     },
     {
-      name: 'location',
-      type: 'text',
+      name: "location",
+      type: "text",
     },
     {
-      name: 'materials',
-      type: 'text',
+      name: "materials",
+      type: "text",
       hasMany: true,
     },
     {
-      name: 'dimensions',
-      type: 'text',
+      name: "dimensions",
+      type: "text",
     },
     {
-      name: 'duration',
-      type: 'text',
+      name: "duration",
+      type: "text",
     },
     {
-      name: 'accent',
-      type: 'text',
+      name: "accent",
+      type: "text",
       admin: {
-        description: 'Hex color, e.g. #C5A065',
+        description: "Hex color, e.g. #C5A065",
       },
     },
     {
-      name: 'description',
-      type: 'textarea',
+      name: "description",
+      type: "textarea",
       required: true,
     },
     {
-      name: 'story',
-      type: 'textarea',
+      name: "story",
+      type: "textarea",
     },
     {
-      name: 'specs',
-      type: 'array',
+      name: "specs",
+      type: "array",
       fields: [
         {
-          name: 'label',
-          type: 'text',
+          name: "label",
+          type: "text",
           required: true,
         },
         {
-          name: 'value',
-          type: 'text',
+          name: "value",
+          type: "text",
           required: true,
         },
       ],
@@ -102,41 +102,41 @@ export const Projects: CollectionConfig = {
     {
       // Used for card/grid thumbnails. The `images` array below is the
       // full gallery shown on the project detail page.
-      name: 'coverImage',
-      type: 'text',
+      name: "coverImage",
+      type: "text",
       admin: {
-        description: 'Image URL, used for list/grid thumbnails',
+        description: "Image URL, used for list/grid thumbnails",
       },
     },
+    { name: "cover", type: "upload", relationTo: "media" },
     {
-      name: 'images',
-      type: 'array',
+      name: "videoFile",
+      type: "upload",
+      relationTo: "media",
+      filterOptions: { mimeType: { contains: "video" } },
+    },
+    {
+      name: "images",
+      type: "array",
       fields: [
-        {
-          name: 'src',
-          type: 'text',
-          required: true,
-        },
-        {
-          name: 'alt',
-          type: 'text',
-          required: true,
-        },
+        { name: "image", type: "upload", relationTo: "media" },
+        { name: "src", type: "text", admin: { description: "Legacy URL" } }, // remove required: true
+        { name: "alt", type: "text", required: true },
       ],
     },
     {
-      name: 'video',
-      type: 'text',
+      name: "video",
+      type: "text",
       admin: {
-        description: 'Video URL (e.g. .mp4 loop)',
+        description: "Video URL (e.g. .mp4 loop)",
       },
     },
     {
-      name: 'modelUrl',
-      type: 'text',
+      name: "modelUrl",
+      type: "text",
       admin: {
-        description: '3D model URL (e.g. .glb)',
+        description: "3D model URL (e.g. .glb)",
       },
     },
   ],
-}
+};

@@ -90,26 +90,30 @@ const QuoteBlock: Block = {
 }
 
 const ImageBlock: Block = {
-  slug: 'image',
-  labels: { singular: 'Image', plural: 'Images' },
+  slug: "image",
+  labels: { singular: "Image", plural: "Images" },
   fields: [
     {
-      name: 'src',
-      type: 'text',
-      required: true,
-      admin: { description: 'Image URL' },
+      name: "image",
+      type: "upload",
+      relationTo: "media",
     },
     {
-      name: 'alt',
-      type: 'text',
+      name: "src",
+      type: "text",
+      admin: { description: "Image URL" },
+    },
+    {
+      name: "alt",
+      type: "text",
       required: true,
     },
     {
-      name: 'caption',
-      type: 'text',
+      name: "caption",
+      type: "text",
     },
   ],
-}
+};
 
 const ListBlock: Block = {
   slug: 'list',
@@ -172,75 +176,86 @@ const CalloutBlock: Block = {
 }
 
 export const Posts: CollectionConfig = {
-  slug: 'posts',
+  slug: "posts",
   admin: {
-    useAsTitle: 'title',
-    defaultColumns: ['title', 'category', 'author', 'publishedAt', 'featured'],
+    useAsTitle: "title",
+    defaultColumns: ["title", "category", "author", "publishedAt", "featured"],
   },
   access: {
     read: () => true,
   },
   fields: [
     {
-      name: 'title',
-      type: 'text',
+      name: "title",
+      type: "text",
       required: true,
     },
     {
-      name: 'slug',
-      type: 'text',
+      name: "slug",
+      type: "text",
       required: true,
       unique: true,
       admin: {
-        position: 'sidebar',
+        position: "sidebar",
       },
     },
     {
-      name: 'excerpt',
-      type: 'textarea',
+      name: "excerpt",
+      type: "textarea",
       required: true,
     },
     {
-      name: 'category',
-      type: 'select',
+      name: "category",
+      type: "select",
       required: true,
-      options: ['Sculpture', 'Typography', 'Installations', 'Process', 'Theory'],
+      options: [
+        "Sculpture",
+        "Typography",
+        "Installations",
+        "Process",
+        "Theory",
+      ],
     },
     {
-      name: 'accent',
-      type: 'text',
+      name: "accent",
+      type: "text",
       admin: {
-        description: 'Hex color, e.g. #C5A065',
+        description: "Hex color, e.g. #C5A065",
       },
     },
     {
-      name: 'readTime',
-      type: 'text',
+      name: "readTime",
+      type: "text",
       admin: {
         description: 'Display string, e.g. "8 min"',
       },
     },
     {
-      name: 'featured',
-      type: 'checkbox',
+      name: "featured",
+      type: "checkbox",
       defaultValue: false,
       admin: {
-        position: 'sidebar',
+        position: "sidebar",
       },
     },
     {
-      name: 'publishedAt',
-      type: 'date',
+      name: "publishedAt",
+      type: "date",
       admin: {
-        position: 'sidebar',
+        position: "sidebar",
         date: {
-          pickerAppearance: 'dayAndTime',
+          pickerAppearance: "dayAndTime",
         },
       },
     },
     {
-      name: 'coverImage',
-      type: 'text', // URL string (Next Blob / External)
+      name: "cover",
+      type: "upload",
+      relationTo: "media",
+    },
+    {
+      name: "coverImage",
+      type: "text", // URL string (Next Blob / External)
     },
     // --- Author ---
     // Kept as plain fields on the post rather than a separate Authors
@@ -250,22 +265,22 @@ export const Posts: CollectionConfig = {
     // pull these three fields out into their own "authors" collection and
     // swap this for a `relationship` field.
     {
-      name: 'author',
-      type: 'text',
+      name: "author",
+      type: "text",
       required: true,
     },
     {
-      name: 'authorRole',
-      type: 'text',
+      name: "authorRole",
+      type: "text",
     },
     {
-      name: 'authorBio',
-      type: 'textarea',
+      name: "authorBio",
+      type: "textarea",
     },
     // --- Body content ---
     {
-      name: 'content',
-      type: 'blocks',
+      name: "content",
+      type: "blocks",
       blocks: [
         ParagraphBlock,
         HeadingBlock,
@@ -278,4 +293,4 @@ export const Posts: CollectionConfig = {
       ],
     },
   ],
-}
+};
