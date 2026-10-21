@@ -3,6 +3,7 @@
 import { motion, useMotionValue, useSpring, useInView } from "framer-motion";
 import { useRef, useEffect } from "react";
 import Link from "next/link";
+import { siteVideos } from "@/lib/site-media";
 
 const works = [
   {
@@ -11,8 +12,7 @@ const works = [
     category: "Commissioned Work",
     year: "2021",
     color: "#C5A065",
-    videoUrl:
-      "https://ky7bb3jva0qgai9o.public.blob.vercel-storage.com/zephyr.mp4",
+    videoUrl: siteVideos.zephyr,
   },
   {
     id: "firefly",
@@ -20,8 +20,7 @@ const works = [
     category: "Kinetic Luminaries",
     year: "2019",
     color: "#B87333",
-    videoUrl:
-      "https://ky7bb3jva0qgai9o.public.blob.vercel-storage.com/firefly.mp4",
+    videoUrl: siteVideos.firefly,
   },
   {
     id: "flying",
@@ -29,8 +28,7 @@ const works = [
     category: "Commissioned Work",
     year: "2015",
     color: "#C5A065",
-    videoUrl:
-      "https://ky7bb3jva0qgai9o.public.blob.vercel-storage.com/flying.mp4",
+    videoUrl: siteVideos.flying,
   },
   {
     id: "sleek",
@@ -38,8 +36,7 @@ const works = [
     category: "Kinetic Luminaries",
     year: "2022",
     color: "#C0C0C0",
-    videoUrl:
-      "https://ky7bb3jva0qgai9o.public.blob.vercel-storage.com/sleek.mp4",
+    videoUrl: siteVideos.sleek,
   },
 ];
 

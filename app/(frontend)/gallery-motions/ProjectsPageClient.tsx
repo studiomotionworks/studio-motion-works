@@ -49,12 +49,12 @@ export function ProjectsPageClient({ projects: allProjects }: { projects: Projec
           <HorizontalGallery
             key={`${activeCategory}-${activeYear}`}
             projects={filteredProjects}
-            onOpen={setSelectedProject}
+            onOpen={() => {}}
           />
         ) : (
           <ProjectList
             projects={filteredProjects}
-            onOpen={setSelectedProject}
+            onOpen={() => {}}
           />
         )}
       </div>

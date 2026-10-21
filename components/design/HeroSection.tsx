@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion } from "framer-motion";
+import { siteVideos } from "@/lib/site-media";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -49,7 +50,7 @@ export function HeroSection() {
           className="h-full w-full object-cover"
         >
           <source
-            src="https://ky7bb3jva0qgai9o.public.blob.vercel-storage.com/output.mp4"
+            src={siteVideos.studioLoop}
             type="video/mp4"
           />
         </video>
