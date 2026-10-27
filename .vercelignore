@@ -1,0 +1,5 @@
+ Vercel deploys only the forwarder. App code and private data stay out of it.
+*
+!vercel.json
+!vercel-proxy/
+!vercel-proxy/**
