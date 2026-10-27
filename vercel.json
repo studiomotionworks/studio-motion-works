@@ -1,0 +1,20 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "builds": [
+    {
+      "src": "vercel-proxy/proxy-status.txt",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "https://motion-studio.motionworks-studio.workers.dev/$1",
+      "headers": {
+        "X-Motionworks-Backend": "cloudflare",
+        "x-vercel-enable-rewrite-caching": "0"
+      }
+    }
+  ]
+}
