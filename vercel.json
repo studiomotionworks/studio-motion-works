@@ -7,24 +7,14 @@
       "use": "@vercel/static"
     }
   ],
-  "rewrites": [
+  "routes": [
     {
-      "source": "/:path*",
-      "destination": "https://motion-studio.motionworks-studio.workers.dev/:path*"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/:path*",
-      "headers": [{ "key": "X-Motionworks-Backend", "value": "cloudflare" }]
-    },
-    {
-      "source": "/api/:path*",
-      "headers": [{ "key": "x-vercel-enable-rewrite-caching", "value": "0" }]
-    },
-    {
-      "source": "/portal-access-key/:path*",
-      "headers": [{ "key": "x-vercel-enable-rewrite-caching", "value": "0" }]
+      "src": "/(.*)",
+      "dest": "https://motion-studio.motionworks-studio.workers.dev/$1",
+      "headers": {
+        "X-Motionworks-Backend": "cloudflare",
+        "x-vercel-enable-rewrite-caching": "0"
+      }
     }
   ]
 }
