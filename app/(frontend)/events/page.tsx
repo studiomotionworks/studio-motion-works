@@ -6,6 +6,8 @@ import { MotionBlurGallery } from "@/components/events/MotionBlurGallery";
 import { RsvpForm } from "@/components/events/RsvpForm";
 import { getAllEvents } from "@/lib/queries";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Events — Studio Motionworks",
   description:

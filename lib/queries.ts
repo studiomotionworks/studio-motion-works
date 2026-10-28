@@ -1,7 +1,7 @@
 import { getPayloadClient } from '@/lib/payload'
 import type { Post, Event, Project, Media } from '@/payload-types'
 
-// These all run server-side only (Local API talks directly to Postgres,
+// These all run server-side only (Local API talks directly to D1,
 // bypassing REST/HTTP). Call them from Server Components / route handlers,
 // never from a "use client" file.
 

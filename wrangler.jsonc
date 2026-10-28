@@ -1,0 +1,39 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "motion-studio",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-26",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "global_fetch_strictly_public"
+  ],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "motion-studio"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "D1",
+      "database_name": "motion-studio",
+      "database_id": "ed7ace24-d99f-4126-a7a8-e94312ea6aed"
+    }
+  ],
+  "env": {
+    "remote": {
+      "d1_databases": [
+        {
+          "binding": "D1",
+          "database_name": "motion-studio",
+          "database_id": "ed7ace24-d99f-4126-a7a8-e94312ea6aed",
+          "remote": true
+        }
+      ]
+    }
+  }
+}

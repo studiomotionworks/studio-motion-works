@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { contentRevalidationHooks } from '../lib/revalidate-content'
 
 export const Events: CollectionConfig = {
   slug: "events",
@@ -104,7 +105,7 @@ export const Events: CollectionConfig = {
         description: "Hex color, e.g. #C5A065",
       },
     },
-    { name: "imageFile", type: "upload", relationTo: "media" },
+    { name: "imageFile", type: "upload", admin: { components: { Field: "/components/admin/MediaUploadField#MediaUploadField" } }, relationTo: "media" },
     {
       name: "rsvpUrl",
       type: "text",
@@ -125,6 +126,8 @@ export const Events: CollectionConfig = {
     },
   ],
   hooks: {
+    afterChange: [contentRevalidationHooks.afterChange],
+    afterDelete: [contentRevalidationHooks.afterDelete],
     beforeChange: [
       ({ data, originalDoc }) => {
         const ts = (d?: string | null) => (d ? new Date(d).getTime() : null);

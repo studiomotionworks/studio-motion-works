@@ -1,4 +1,5 @@
 import type { CollectionConfig, Block } from 'payload'
+import { contentRevalidationHooks } from '../lib/revalidate-content'
 
 // Each block below maps 1:1 to a variant of the `ContentBlock` union in
 // postContent.ts (paragraph / heading / quote / image / list / divider /
@@ -95,7 +96,7 @@ const ImageBlock: Block = {
   fields: [
     {
       name: "image",
-      type: "upload",
+      type: "upload", admin: { components: { Field: "/components/admin/MediaUploadField#MediaUploadField" } },
       relationTo: "media",
     },
     {
@@ -177,6 +178,7 @@ const CalloutBlock: Block = {
 
 export const Posts: CollectionConfig = {
   slug: "posts",
+  hooks: { afterChange: [contentRevalidationHooks.afterChange], afterDelete: [contentRevalidationHooks.afterDelete] },
   admin: {
     useAsTitle: "title",
     defaultColumns: ["title", "category", "author", "publishedAt", "featured"],
@@ -250,7 +252,7 @@ export const Posts: CollectionConfig = {
     },
     {
       name: "cover",
-      type: "upload",
+      type: "upload", admin: { components: { Field: "/components/admin/MediaUploadField#MediaUploadField" } },
       relationTo: "media",
     },
     {

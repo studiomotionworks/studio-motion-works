@@ -29,8 +29,12 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Cloudflare database and deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Payload uses Cloudflare D1; media stays in the existing Cloudflare R2 bucket.
+Apply the local schema with `npm run db:migrate:local` before starting development.
+Use `npm run build:cloudflare`, `npm run preview:cloudflare`, and
+`npm run deploy:cloudflare` for the Workers build, preview, and deployment.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See [the migration guide](docs/cloudflare-migration.md) for account setup, Neon
+data transfer, secrets, verification, free-plan limits, and rollback details.

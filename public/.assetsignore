@@ -1,0 +1,3 @@
+# Unused source image exceeds Workers' 25 MiB static-asset limit.
+# The homepage serves its Firefly video from R2 via lib/site-media.ts.
+/home-gallery/firefly.jpg

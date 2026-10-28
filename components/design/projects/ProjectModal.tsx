@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { Canvas } from "@react-three/fiber";
 import {
-  OrbitControls,
   Environment,
   ContactShadows,
   PresentationControls,
@@ -27,17 +27,18 @@ export function ProjectModal({
 }) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const [activeTab, setActiveTab] = useState<"story" | "specs">("story");
-  const [sliderPos, setSliderPos] = useState(50);
 
   // Lock body scroll
   useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    const previousFocus = document.activeElement;
     if (project) {
       document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
+      overlayRef.current?.querySelector<HTMLButtonElement>("button")?.focus();
     }
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
+      if (project && previousFocus instanceof HTMLElement) previousFocus.focus();
     };
   }, [project]);
 
@@ -45,10 +46,25 @@ export function ProjectModal({
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
+      if (e.key === "Tab" && project) {
+        const controls = overlayRef.current?.querySelectorAll<HTMLElement>(
+          'button, a[href], video[controls], [tabindex="0"]',
+        );
+        if (!controls?.length) return;
+        const first = controls[0];
+        const last = controls[controls.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
     window.addEventListener("keydown", handleEsc);
     return () => window.removeEventListener("keydown", handleEsc);
-  }, [onClose]);
+  }, [onClose, project]);
 
   const ModelComponent = project ? modelMap[project.id] : null;
 
@@ -57,6 +73,10 @@ export function ProjectModal({
       {project && (
         <motion.div
           ref={overlayRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="project-modal-title"
+          data-lenis-prevent
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -96,13 +116,29 @@ export function ProjectModal({
               >
                 {project.category} — {project.year}
               </span>
-              <h2 className="mt-4 font-display text-[clamp(2rem,5vw,4rem)] font-bold leading-[1] tracking-tight text-ink">
+              <h2 id="project-modal-title" className="mt-4 font-display text-[clamp(2rem,5vw,4rem)] font-bold leading-[1] tracking-tight text-ink">
                 {project.title}
               </h2>
               <p className="mt-3 font-body text-lg text-ink-muted">
                 {project.subtitle}
               </p>
             </motion.div>
+
+            {project.video ? (
+              <video
+                key={project.video}
+                src={project.video}
+                poster={project.coverImage || undefined}
+                controls
+                playsInline
+                preload="metadata"
+                className="mt-12 max-h-[75vh] w-full rounded-sm border border-border bg-black"
+              />
+            ) : project.coverImage ? (
+              <div className="relative mt-12 aspect-video overflow-hidden rounded-sm border border-border">
+                <Image src={project.coverImage} alt={project.title} fill unoptimized sizes="100vw" className="object-contain" />
+              </div>
+            ) : null}
 
             {/* 3D Model Viewer */}
             {ModelComponent && (
@@ -138,80 +174,14 @@ export function ProjectModal({
               </motion.div>
             )}
 
-            {/* Before/After Slider (placeholder for projects with images) */}
-            {(project?.images?.length ?? 0) >= 2 && (
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.6 }}
-                className="mt-8"
-              >
-                <div className="mb-4 flex items-center justify-between">
-                  <span className="font-body text-[10px] tracking-[0.3em] uppercase text-ink-subtle">
-                    Configuration Comparison
-                  </span>
-                  <span className="font-body text-[10px] tracking-[0.2em] text-bronze">
-                    {sliderPos}%
-                  </span>
-                </div>
-                <div className="relative aspect-[16/9] overflow-hidden rounded-sm border border-border bg-gunmetal">
-                  {/* Before (left side) */}
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      background: `radial-gradient(circle at 30% 50%, ${project.accent}40, transparent 70%)`,
-                    }}
-                  />
-                  {/* After (clipped by slider) */}
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      clipPath: `inset(0 0 0 ${sliderPos}%)`,
-                      background: `radial-gradient(circle at 70% 50%, ${project.accent}60, transparent 70%)`,
-                    }}
-                  />
-                  {/* Slider handle */}
-                  <div
-                    className="absolute top-0 bottom-0 w-px cursor-ew-resize bg-bronze"
-                    style={{ left: `${sliderPos}%` }}
-                    onMouseDown={(e) => {
-                      const startX = e.clientX;
-                      const startPos = sliderPos;
-                      const handleMove = (moveEvent: MouseEvent) => {
-                        const delta =
-                          ((moveEvent.clientX - startX) / window.innerWidth) *
-                          100;
-                        setSliderPos(
-                          Math.max(5, Math.min(95, startPos + delta)),
-                        );
-                      };
-                      const handleUp = () => {
-                        window.removeEventListener("mousemove", handleMove);
-                        window.removeEventListener("mouseup", handleUp);
-                      };
-                      window.addEventListener("mousemove", handleMove);
-                      window.addEventListener("mouseup", handleUp);
-                    }}
-                  >
-                    <div className="absolute left-1/2 top-1/2 flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-bronze bg-void/80 backdrop-blur-sm">
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 12 12"
-                        fill="none"
-                      >
-                        <path
-                          d="M4 2L1 6L4 10M8 2L11 6L8 10"
-                          stroke="#C5A065"
-                          strokeWidth="1.2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
+            {!!project.images?.some((image) => image.src) && (
+              <div className="mt-8 grid gap-6 sm:grid-cols-2">
+                {project.images.filter((image) => image.src).map((image, index) => (
+                  <div key={image.id ?? index} className="relative aspect-[4/3] overflow-hidden rounded-sm border border-border">
+                    <Image src={image.src!} alt={image.alt || project.title} fill unoptimized sizes="(min-width: 640px) 50vw, 100vw" className="object-cover" />
                   </div>
-                </div>
-              </motion.div>
+                ))}
+              </div>
             )}
 
             {/* Tab navigation */}

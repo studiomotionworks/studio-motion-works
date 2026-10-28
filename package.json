@@ -4,19 +4,41 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "postinstall": "node scripts/patch-payload-ui.mjs",
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
+    "test:media": "node scripts/test-media-image-processing.mjs",
+    "test:media-folders": "node scripts/test-media-folders.mjs",
+    "test:media-move": "node scripts/test-media-move.mjs",
     "generate:importmap": "payload generate:importmap",
-    "seed": "payload run lib/seed.ts"
+    "seed": "payload run lib/seed.ts",
+    "build:cloudflare": "node scripts/cloudflare-cli.mjs build",
+    "preview:cloudflare": "node scripts/cloudflare-cli.mjs preview",
+    "deploy:cloudflare": "npm run build:cloudflare && node scripts/cloudflare-cli.mjs deploy",
+    "cf:types": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "db:migrate:create": "payload migrate:create",
+    "db:migrate:local": "payload migrate",
+    "db:migrate:remote": "cross-env CLOUDFLARE_ENV=remote NODE_ENV=production payload migrate",
+    "db:export:neon": "node --env-file=.env.local scripts/export-neon-to-d1.mjs",
+    "db:verify:local": "node scripts/verify-d1-import.mjs",
+    "test:d1": "node scripts/test-d1-transfer.mjs",
+    "db:import:local": "node scripts/verify-d1-import.mjs --import",
+    "db:import:remote": "node scripts/verify-d1-import.mjs --import --remote",
+    "db:verify:remote": "node scripts/verify-d1-import.mjs --remote"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "3.1149.0",
+    "@aws-sdk/s3-request-presigner": "3.1149.0",
     "@needle-tools/gltf-progressive": "4.0.0-alpha.3",
+    "@opennextjs/cloudflare": "^1.20.13",
+    "@payloadcms/db-d1-sqlite": "3.90.2",
     "@payloadcms/db-postgres": "^3.90.2",
     "@payloadcms/next": "^3.90.2",
     "@payloadcms/richtext-lexical": "^3.90.2",
     "@payloadcms/storage-s3": "^3.90.2",
+    "@payloadcms/ui": "3.90.2",
     "@react-three/drei": "^10.7.8",
     "@react-three/fiber": "^9.7.0",
     "clsx": "^2.1.1",
@@ -45,7 +67,8 @@
     "eslint-config-next": "16.3.4",
     "pg": "^8.23.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.152.0"
   },
   "allowScripts": {
     "unrs-resolver@1.12.2": true

@@ -1,0 +1,9 @@
+# Wrangler preview variables. Copy to .dev.vars and use your existing values.
+NEXTJS_ENV=development
+PAYLOAD_SECRET=
+R2_ACCOUNT_ID=
+R2_BUCKET=
+R2_ACCESS_KEY_ID=
+R2_SECRET_ACCESS_KEY=
+R2_PUBLIC_URL=
+NEXT_PUBLIC_MEDIA_URL=

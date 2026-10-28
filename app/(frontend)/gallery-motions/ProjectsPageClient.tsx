@@ -1,12 +1,16 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { SharedCanvas } from "@/components/design/projects/SharedCanvas";
+import dynamic from "next/dynamic";
 import { ProjectsHero } from "@/components/design/projects/ProjectsHero";
 import { HorizontalGallery } from "@/components/design/projects/HorizontalGallery";
 import { ProjectList } from "@/components/design/projects/ProjectList";
-import { ProjectModal } from "@/components/design/projects/ProjectModal";
 import type { Project } from "@/payload-types";
+
+const ProjectModal = dynamic(
+  () => import("@/components/design/projects/ProjectModal").then((module) => module.ProjectModal),
+  { ssr: false },
+);
 
 export function ProjectsPageClient({ projects: allProjects }: { projects: Project[] }) {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -25,8 +29,6 @@ export function ProjectsPageClient({ projects: allProjects }: { projects: Projec
 
   return (
     <>
-      <SharedCanvas />
-
       <div className="relative z-10">
         <ProjectsHero
           activeCategory={activeCategory}
@@ -49,20 +51,23 @@ export function ProjectsPageClient({ projects: allProjects }: { projects: Projec
           <HorizontalGallery
             key={`${activeCategory}-${activeYear}`}
             projects={filteredProjects}
-            onOpen={() => {}}
+            onOpen={setSelectedProject}
           />
         ) : (
           <ProjectList
             projects={filteredProjects}
-            onOpen={() => {}}
+            onOpen={setSelectedProject}
           />
         )}
       </div>
 
-      <ProjectModal
-        project={selectedProject}
-        onClose={() => setSelectedProject(null)}
-      />
+      {selectedProject && (
+        <ProjectModal
+          key={selectedProject.id}
+          project={selectedProject}
+          onClose={() => setSelectedProject(null)}
+        />
+      )}
     </>
   );
 }

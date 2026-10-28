@@ -1,20 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
-import { View } from "@react-three/drei";
-import { HelixPreview } from "./previews/HelixPreview";
-import { OrbitPreview } from "./previews/OrbitPreview";
-import { TidePreview } from "./previews/TidePreview";
-import { PulsePreview } from "./previews/PulsePreview";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import type { Project } from "@/payload-types";
-
-const previewMap: Record<string, React.ComponentType> = {
-  helix: HelixPreview,
-  orbit: OrbitPreview,
-  tide: TidePreview,
-  pulse: PulsePreview,
-};
 
 export function ProjectCard({
   project,
@@ -25,54 +13,59 @@ export function ProjectCard({
   index: number;
   onOpen: (project: Project) => void;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
+  const ref = useRef<HTMLButtonElement>(null);
+  const [loadVideo, setLoadVideo] = useState(false);
+  const uploadedCover = project.cover && typeof project.cover === "object" ? project.cover : null;
+  const cover = uploadedCover?.sizes?.card?.url || project.coverImage;
+  const video = project.video;
 
-  const rotateX = useMotionValue(0);
-  const rotateY = useMotionValue(0);
-  const springRotateX = useSpring(rotateX, { stiffness: 150, damping: 20 });
-  const springRotateY = useSpring(rotateY, { stiffness: 150, damping: 20 });
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    rotateX.set((e.clientY - centerY) * -0.02);
-    rotateY.set((e.clientX - centerX) * 0.02);
-  };
-
-  const PreviewComponent = previewMap[project.id];
+  useEffect(() => {
+    const card = ref.current;
+    if (!card || cover || !video) return;
+    // Offscreen cards should not fetch or decode video just to build a preview.
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setLoadVideo(true);
+        observer.disconnect();
+      }
+    }, { rootMargin: "200px" });
+    observer.observe(card);
+    return () => observer.disconnect();
+  }, [cover, video]);
 
   return (
-    <motion.div
+    <button
+      type="button"
+      aria-label={`View ${project.title}`}
       ref={ref}
-      data-magnetic
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => {
-        setIsHovered(false);
-        rotateX.set(0);
-        rotateY.set(0);
-      }}
       onClick={() => onOpen(project)}
-      style={{
-        rotateX: springRotateX,
-        rotateY: springRotateY,
-        transformStyle: "preserve-3d",
-        perspective: 1200,
-      }}
-      className="group relative h-[70vh] w-[80vw] shrink-0 cursor-pointer overflow-hidden rounded-sm border border-border bg-surface md:w-[520px]"
+      className="group relative text-left focus-visible:outline-2 focus-visible:outline-bronze h-[70vh] w-[80vw] shrink-0 cursor-pointer overflow-hidden rounded-sm border border-border bg-surface md:w-[520px]"
     >
-      {/* 3D Preview — only rendered when hovered to save GPU */}
-      {PreviewComponent && (
-        <View
-          className="absolute inset-0 opacity-0 transition-opacity duration-700 group-hover:opacity-100"
-          style={{ pointerEvents: "none" }}
-        >
-          <PreviewComponent />
-        </View>
-      )}
+      {cover ? (
+        <Image
+          src={cover}
+          alt={project.title}
+          fill
+          sizes="(min-width: 768px) 520px, 80vw"
+          className="pointer-events-none object-cover"
+        />
+      ) : video && loadVideo ? (
+        <video
+          src={video}
+          muted
+          playsInline
+          preload="metadata"
+          controls={false}
+          onLoadedMetadata={(event) => {
+            // Decode a still frame without starting playback.
+            event.currentTarget.currentTime = 0.001;
+          }}
+          onLoadedData={(event) => event.currentTarget.pause()}
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+          aria-hidden="true"
+          tabIndex={-1}
+        />
+      ) : null}
 
       {/* Fallback visual */}
       <div
@@ -81,25 +74,6 @@ export function ProjectCard({
           background: `radial-gradient(circle at 40% 40%, ${project.accent}40, transparent 70%)`,
         }}
       />
-
-      {/* Concentric ring decoration */}
-      <div className="absolute -right-24 -top-24 h-64 w-64">
-        {[1, 2, 3].map((ring) => (
-          <motion.div
-            key={ring}
-            className="absolute inset-0 rounded-full border border-bronze/10"
-            style={{
-              margin: `${(3 - ring) * 24}px`,
-            }}
-            animate={{ rotate: ring % 2 === 0 ? 360 : -360 }}
-            transition={{
-              duration: 30 + ring * 10,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-          />
-        ))}
-      </div>
 
       {/* Index number */}
       <div className="absolute left-6 top-6 z-20">
@@ -111,7 +85,7 @@ export function ProjectCard({
       {/* Category badge */}
       <div className="absolute right-6 top-6 z-20">
         <span
-          className="rounded-full border px-3 py-1 font-body text-[9px] tracking-[0.3em] uppercase backdrop-blur-sm"
+          className="rounded-full border px-3 py-1 font-body text-[9px] tracking-[0.3em] uppercase"
           style={{
             borderColor: `${project.accent}40`,
             color: project.accent ?? '',
@@ -123,7 +97,7 @@ export function ProjectCard({
       </div>
 
       {/* Content */}
-      <div className="absolute inset-x-0 bottom-0 z-20 p-8">
+      <div className="absolute inset-x-0 bottom-0 z-20 p-8 [&_.text-ink]:text-white [&_.text-ink-muted]:text-white/80 [&_.text-ink-subtle]:text-white/70">
         <span className="font-body text-[10px] tracking-[0.3em] uppercase text-ink-subtle">
           {project.year} — {project.location}
         </span>
@@ -147,27 +121,12 @@ export function ProjectCard({
         </div>
       </div>
 
-      {/* Hover gradient overlay */}
-      <motion.div
+      <div
         className="pointer-events-none absolute inset-0 z-10"
-        style={{
-          background:
-            "linear-gradient(to top, rgba(10,10,10,0.9) 0%, transparent 50%)",
-        }}
-        animate={{ opacity: isHovered ? 1 : 0.6 }}
-        transition={{ duration: 0.5 }}
+        style={{ background: "linear-gradient(to top, rgba(10,10,10,0.9) 0%, transparent 65%)" }}
       />
 
-      {/* "View" affordance */}
-      <motion.div
-        className="absolute bottom-8 right-8 z-30 flex h-12 w-12 items-center justify-center rounded-full border border-bronze/40 bg-void/60 backdrop-blur-sm"
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{
-          scale: isHovered ? 1 : 0,
-          opacity: isHovered ? 1 : 0,
-        }}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      >
+      <div className="absolute bottom-8 right-8 z-30 flex h-12 w-12 items-center justify-center rounded-full border border-bronze/40 bg-void/80 transition-transform duration-200 group-hover:translate-x-1 group-focus-visible:translate-x-1">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path
             d="M3 8H13M13 8L9 4M13 8L9 12"
@@ -177,7 +136,7 @@ export function ProjectCard({
             strokeLinejoin="round"
           />
         </svg>
-      </motion.div>
-    </motion.div>
+      </div>
+    </button>
   );
 }

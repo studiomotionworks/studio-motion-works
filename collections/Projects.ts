@@ -1,7 +1,9 @@
 import type { CollectionConfig } from 'payload'
+import { contentRevalidationHooks } from '../lib/revalidate-content'
 
 export const Projects: CollectionConfig = {
   slug: "projects",
+  hooks: { afterChange: [contentRevalidationHooks.afterChange], afterDelete: [contentRevalidationHooks.afterDelete] },
   admin: {
     useAsTitle: "title",
     defaultColumns: ["title", "category", "year", "featured"],
@@ -108,10 +110,10 @@ export const Projects: CollectionConfig = {
         description: "Image URL, used for list/grid thumbnails",
       },
     },
-    { name: "cover", type: "upload", relationTo: "media" },
+    { name: "cover", type: "upload", admin: { components: { Field: "/components/admin/MediaUploadField#MediaUploadField" } }, relationTo: "media" },
     {
       name: "videoFile",
-      type: "upload",
+      type: "upload", admin: { components: { Field: "/components/admin/MediaUploadField#MediaUploadField" } },
       relationTo: "media",
       filterOptions: { mimeType: { contains: "video" } },
     },
@@ -119,7 +121,7 @@ export const Projects: CollectionConfig = {
       name: "images",
       type: "array",
       fields: [
-        { name: "image", type: "upload", relationTo: "media" },
+        { name: "image", type: "upload", admin: { components: { Field: "/components/admin/MediaUploadField#MediaUploadField" } }, relationTo: "media" },
         { name: "src", type: "text", admin: { description: "Legacy URL" } }, // remove required: true
         { name: "alt", type: "text", required: true },
       ],
